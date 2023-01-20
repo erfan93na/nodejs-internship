@@ -1,7 +1,10 @@
 import express from "express";
 import Person from "../models/model";
+import { body } from "express-validator";
+import { createUserValidations } from "../validations/people/create";
 const router = express.Router();
-router.post("/post", async (req, res) => {
+router.post("/post", ...createUserValidations, async (req, res) => {
+  console.log(3)
   const { name, age } = req.body;
   const person = new Person({ name, age });
   try {
