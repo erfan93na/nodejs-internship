@@ -1,7 +1,7 @@
 I asked **ChatGPT** to give me a list of 30 NodeJs project ideas for a *virtual internship*.
 
 I'm gonna push code of each of these projects in this repo.
-
+Check the list of branches for currently done tasks.
 
 The List:
 
