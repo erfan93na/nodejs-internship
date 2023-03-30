@@ -9,7 +9,7 @@
         justify-content: center;
         height: 100vh;
       }
-      
+
       form {
         border: 1px solid #ccc;
         padding: 20px;
@@ -17,14 +17,15 @@
         border-radius: 5px;
         text-align: center;
       }
-      
+
       label {
         display: block;
         margin-bottom: 10px;
         font-size: 18px;
       }
-      
-      input[type=text], input[type=password] {
+
+      input[type='text'],
+      input[type='password'] {
         padding: 12px 20px;
         margin-bottom: 20px;
         border: 1px solid #ccc;
@@ -32,9 +33,9 @@
         box-sizing: border-box;
         width: 100%;
       }
-      
-      input[type=submit] {
-        background-color: #4CAF50;
+
+      input[type='submit'] {
+        background-color: #4caf50;
         color: white;
         padding: 12px 20px;
         border: none;
@@ -42,21 +43,24 @@
         cursor: pointer;
         width: 100%;
       }
-      
-      input[type=submit]:hover {
+
+      input[type='submit']:hover {
         background-color: #45a049;
       }
     </style>
   </head>
   <body>
-    <form action="/login" method="post">
+    <form action="/auth/signin" method="post">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username">
-      <br>
+      <input type="text" id="username" name="username" />
+      <br />
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password">
-      <br><br>
-      <input type="submit" value="Login">
-    </form> 
+      <input type="password" id="password" name="password" />
+      <br /><br />
+      <% if (wrongCredentionals == true) { %>
+      <p style="color: red">username or password are wrong!</p>
+      <% } %>
+      <input type="submit" value="Login" />
+    </form>
   </body>
 </html>
