@@ -1,0 +1,44 @@
+// {
+//   "version": "0.2.0",
+//   "configurations": [
+//     {
+//       "name": "backend dbg",
+//       "type": "node",
+//       "request": "launch",
+//       "runtimeExecutable": "node",
+//       "runtimeArgs": ["-r", "./backend/node_modules/ts-node/register"],
+
+//       "args": ["./backend/src/index.ts"],
+
+//       "cwd": "${workspaceRoot}",
+//       "internalConsoleOptions": "openOnSessionStart",
+//       "skipFiles": ["<node_internals>/**", "node_modules/**"],
+//       "env": {
+//         "DB_URI": "mongodb+srv://erfan93:erfan93@cluster0.m7hluuk.mongodb.net/chat?retryWrites=true&w=majority",
+//         "JWT_KEY": "mykey"
+//       }
+//     }
+//   ]
+// }
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "backend dbg",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-r", "./backend/node_modules/ts-node/register"],
+
+      "args": ["./backend/src/index.ts"],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "env": {
+        "DB_URI": "mongodb+srv://erfan93:erfan93@cluster0.m7hluuk.mongodb.net/chat?retryWrites=true&w=majority",
+        "JWT_KEY": "mykey"
+      }
+    }
+  ]
+}
