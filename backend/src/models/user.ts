@@ -8,10 +8,24 @@ interface IUserDocument extends IUser, Document {
   generateAuthToken: () => string;
 }
 
-const userSchema: Schema<IUserDocument> = new Schema({
-  username: { required: true, type: String, unique: true },
-  password: { required: true, type: String },
-});
+const userSchema: Schema<IUserDocument> = new Schema(
+  {
+    username: { required: true, type: String, unique: true },
+    password: { required: true, type: String },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+        return ret;
+      },
+    },
+  }
+);
 
 userSchema.methods.generateAuthToken = function () {
   const payload = { username: this.username };

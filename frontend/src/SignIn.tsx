@@ -1,20 +1,26 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { api } from "./api";
+import { AppContext } from "./AppContextProvider";
 
 function SignIn() {
+  const { setUsername } = useContext(AppContext) ?? {};
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const req = Object.fromEntries(
+      new FormData(event.target as HTMLFormElement)
+    );
     event.preventDefault();
     api
       .post("/auth/signin", {
-        ...Object.fromEntries(new FormData(event.target as HTMLFormElement)),
+        ...req,
       })
       .then((res) => {
         if (res.status === 200) {
-          const { token } = res.data;
+          const { token, user } = res.data;
           localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(user));
           navigate("/");
         }
       })

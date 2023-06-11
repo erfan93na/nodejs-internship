@@ -9,7 +9,7 @@ export const signin = (req: Request, res: Response) => {
         res.status(400).json('Invalid Username or Password');
       } else {
         const token = user.generateAuthToken();
-        res.status(200).json({ token });
+        res.status(200).json({ token, user });
       }
     })
     .catch((e) => {

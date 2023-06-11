@@ -1,35 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
 import { api } from "./api";
+import { AppContext } from "./AppContextProvider";
 
 interface User {
-  id: number;
+  id: string;
   username: string;
 }
 
 interface Message {
+  sender_id: string;
+  text: string;
   id: number;
-  sender: string;
-  content: string;
 }
 
 function Chat() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const { username: loginedUserUsername, setUsername } =
+    useContext(AppContext) ?? {};
+  const loginedUserId = users.find(
+    (user) => user.username === loginedUserUsername
+  )?.id;
   useEffect(() => {
     api.get("/users").then((res) => setUsers(res.data));
   }, []);
-
-  const handleUserClick = (user: User) => {
+  useEffect(() => {
+    setUsername?.(JSON.parse(localStorage.getItem("user") ?? "null").username);
+  }, []);
+  const handleUserClick = async (user: User) => {
     setSelectedUser(user);
     // Fetch messages for selected user here
-    setMessages([
-      { id: 1, sender: "Alice", content: "Hi Bob, how are you?" },
-      { id: 2, sender: "Bob", content: "I'm good, thanks for asking!" },
-      { id: 3, sender: "Alice", content: "That's great to hear." },
-    ]);
+    const resp = await api.get(`/message/${user.id}/${loginedUserId}`);
+    setMessages(resp.data);
   };
-
+  const getUserNameById = (id: string) => users.find((user) => user.id === id);
+  const handleSendMessage = async (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.target as HTMLFormElement);
+    api.post("/message/", {
+      sender_id: loginedUserId,
+      receiver_id: selectedUser?.id,
+      text: data.get("message"),
+    });
+  };
   return (
     <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
       <div
@@ -42,24 +56,26 @@ function Chat() {
       >
         <h2 style={{ marginBottom: "1rem" }}>Users</h2>
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {users.map((user) => (
-            <li key={user.id} style={{ marginBottom: "0.5rem" }}>
-              <button
-                onClick={() => handleUserClick(user)}
-                style={{
-                  padding: "0.5rem",
-                  borderRadius: "4px",
-                  border: "none",
-                  backgroundColor:
-                    selectedUser?.id === user.id ? "blue" : "white",
-                  color: selectedUser?.id === user.id ? "white" : "black",
-                  cursor: "pointer",
-                }}
-              >
-                {user.username}
-              </button>
-            </li>
-          ))}
+          {users
+            .filter(({ id }) => id !== loginedUserId)
+            .map((user) => (
+              <li key={user.id} style={{ marginBottom: "0.5rem" }}>
+                <button
+                  onClick={() => handleUserClick(user)}
+                  style={{
+                    padding: "0.5rem",
+                    borderRadius: "4px",
+                    border: "none",
+                    backgroundColor:
+                      selectedUser?.id === user.id ? "blue" : "white",
+                    color: selectedUser?.id === user.id ? "white" : "black",
+                    cursor: "pointer",
+                  }}
+                >
+                  {user.username}
+                </button>
+              </li>
+            ))}
         </ul>
       </div>
       <div
@@ -76,10 +92,20 @@ function Chat() {
             <ul style={{ listStyle: "none", padding: 0 }}>
               {messages.map((message) => (
                 <li key={message.id} style={{ marginBottom: "0.5rem" }}>
-                  <strong>{message.sender}:</strong> {message.content}
+                  <strong>
+                    <>
+                      {getUserNameById(message.sender_id)?.username}
+                      {": "}
+                    </>
+                  </strong>
+                  {message.text}
                 </li>
               ))}
             </ul>
+            <form onSubmit={handleSendMessage}>
+              <input name="message" />
+              <input type="submit" />
+            </form>
           </>
         ) : (
           <p>Select a user to start chatting!</p>

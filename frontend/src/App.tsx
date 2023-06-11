@@ -5,10 +5,11 @@ import Chat from "./Chat";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import { ToastContainer } from "react-toastify";
+import { AppContextProvider } from "./AppContextProvider";
 
 function App() {
   return (
-    <>
+    <AppContextProvider>
       <Routes>
         <Route
           path="/"
@@ -22,7 +23,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
-    </>
+    </AppContextProvider>
   );
 }
 
