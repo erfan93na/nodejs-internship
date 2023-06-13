@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useContext, useEffect, useState } from "react";
+import React, {
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { api } from "./api";
 import { AppContext } from "./AppContextProvider";
 
@@ -44,6 +50,37 @@ function Chat() {
       text: data.get("message"),
     });
   };
+  const socket = useRef<WebSocket>();
+
+  useEffect(() => {
+    if (socket.current?.readyState !== 1) {
+      const url = `${window.location.protocol === "https" ? "wss" : "ws"}://${
+        window.location.host
+      }:${import.meta.env.VITE_CHAT_WS_PORT}/chat-ws/`;
+      socket.current = new WebSocket(url);
+    }
+    socket.current.addEventListener("message", ({ data }) => {
+      const parsed = JSON.parse(data);
+      if (parsed.type === "new-chat-message") {
+        const message: Message = parsed.payload;
+        setMessages((messages) => [...messages, message]);
+      }
+    });
+    return () => socket.current?.close();
+  }, []);
+  useEffect(() => {
+    const sendNewChatMessage = () => {
+      if (socket.current?.readyState === 1 && selectedUser) {
+        socket.current?.send(
+          JSON.stringify({
+            type: "new-chat-started",
+            payload: { userId1: loginedUserId, userId2: selectedUser?.id },
+          })
+        );
+      }
+    };
+    sendNewChatMessage();
+  }, [selectedUser]);
   return (
     <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
       <div
