@@ -7,10 +7,10 @@ Check the list of branches for currently done tasks.
 The List:
 
 1. **Create a simple web server** using Node.js and Express.
-2. **Build a RESTful API** using Node.js, Express, and MongoDB. &#9745;
-3. **Implement user authentication and authorization** using JSON Web Tokens (JWT). &#9745;
-4. **Create a real-time chat application** using Node.js and WebSockets.
-5. **Build a job scheduling application** using Node.js and cron.
+2. **Build a RESTful API** using Node.js, Express, and MongoDB. ✅
+3. **Implement user authentication and authorization** using JSON Web Tokens (JWT). ✅
+4. **Create a real-time chat application** using Node.js and WebSockets. ✅
+5. **Build a job scheduling application** using Node.js and cron. 
 6. **Create a file upload and download application** using Node.js and Multer.
 7. **Implement a web scraping application** using Node.js and Cheerio.
 8. **Build a weather app that consumes a third-party API** using Node.js and Request.
