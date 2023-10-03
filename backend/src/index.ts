@@ -3,12 +3,14 @@ import passport from "passport";
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { router } from "./routes";
 dotenv.config();
-handlePassportJwt(passport);
-const app = express();
 
+handlePassportJwt(passport, process.env.JWT_KEY ?? "");
+const app = express();
 app.use(express.json());
 app.use(passport.initialize());
+app.use(router);
 mongoose
   .connect(process.env.DB_URI ?? "")
   .then(() => {

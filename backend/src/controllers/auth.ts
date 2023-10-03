@@ -16,7 +16,7 @@ export const signIn = (req: Request, res: Response) => {
 
 export const signUp = (req: Request, res: Response) => {
   const { username, password } = req.body;
-  User.find({ username })
+  User.findOne({ username })
     .then((user) => {
       if (user) {
         res.status(400).send("user already exists");

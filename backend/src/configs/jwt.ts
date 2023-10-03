@@ -2,14 +2,18 @@ import jwt from "jsonwebtoken";
 import passport, { Passport, PassportStatic } from "passport";
 import { Strategy, StrategyOptions, ExtractJwt } from "passport-jwt";
 import { User } from "../models";
-const options: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_KEY,
-};
-export const handlePassportJwt = function (passport: PassportStatic) {
+
+export const handlePassportJwt = function (
+  passport: PassportStatic,
+  jwtKey: string
+) {
+  const options: StrategyOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: jwtKey,
+  };
   passport.use(
     new Strategy(options, (payload, done) => {
-      User.find({ username: payload.sub })
+      User.findOne({ username: payload.sub })
         .then((user) => {
           if (user) done(null, user);
           else done(null, false);
