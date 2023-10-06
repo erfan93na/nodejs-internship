@@ -1,4 +1,4 @@
-import { error } from "./controllers/";
+import { error, error404 } from "./controllers/";
 import { handlePassportJwt } from "./configs/jwt";
 import passport from "passport";
 import express from "express";
@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(router);
 app.use(error);
+app.use(error404);
 mongoose
   .connect(process.env.DB_URI ?? "")
   .then(() => {
