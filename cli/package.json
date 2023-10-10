@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "run-scheduler": "./src/index.ts"
+  },
   "type": "module",
   "scripts": {
     "start": "npx nodemon",
@@ -24,6 +27,7 @@
   },
   "dependencies": {
     "axios": "^1.5.1",
+    "chalk": "^5.3.0",
     "prompts": "^2.4.2"
   }
 }

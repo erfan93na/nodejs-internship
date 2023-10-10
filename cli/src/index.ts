@@ -1,4 +1,7 @@
-import axios from "axios";
+#!/usr/bin/env -S npx ts-node
+
+import axios, { AxiosError } from "axios";
+import chalk from "chalk";
 import prompts from "prompts";
 type Task = {
   title: string;
@@ -8,20 +11,26 @@ type Task = {
 };
 const api = axios.create({ baseURL: "http://localhost:4000" });
 const run = async () => {
-  const token = await showLogin();
-  api.defaults.headers.common["Authorization"] = "Bearer " + token;
-  const mainAction = await showMainMenu();
+  try {
+    const token = await showLogin();
+    api.defaults.headers.common["Authorization"] = "Bearer " + token;
+    const mainAction = await showMainMenu();
 
-  if (mainAction === "create") {
-    showCreateTask(goToTaskActions);
-  } else if (mainAction === "tasksList") {
-    goToTaskActions();
+    if (mainAction === "create") {
+      showCreateTask(goToTaskActions);
+    } else if (mainAction === "tasksList") {
+      goToTaskActions();
+    }
+  } catch (e) {
+    if (e instanceof AxiosError)
+      console.log(chalk.red(e.response?.data.error ?? e.message));
+    run();
   }
 };
 const goToTaskActions = async () => {
   const task = await showTasksList();
 
-  showTaskActions(task, showTasksList);
+  showTaskActions(task, goToTaskActions);
 };
 const showLogin = async () => {
   const { username } = await prompts({
