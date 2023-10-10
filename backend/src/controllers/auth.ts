@@ -7,6 +7,7 @@ export const signIn = async (req: Request, res: Response) => {
   const user = await User.findOne({ username, password });
   if (user) {
     const token = generateJwtToken({ sub: user.username });
+
     res.status(200).send({ token });
   } else res.status(400).send("user not found");
 };
